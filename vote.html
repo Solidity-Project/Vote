@@ -1,0 +1,90 @@
+<!Doctype html>
+<html>
+<head>
+<meta charset="UTF-8">
+<script type="text/javascript" src="./lib/bignumber.min.js"></script>
+<script type="text/javascript" src="./lib/web3-light.js"></script>
+<script type="text/javascript">
+   
+    var Web3 = require('web3');
+    var web3 = new Web3();
+	web3.setProvider(new web3.providers.HttpProvider("http://localhost:8545"));
+
+	var vc = web3.eth.contract([ { "constant": true, "inputs": [ { "name": "cand", "type": "string" } ], "name": "getScore", "outputs": [ { "name": "", "type": "uint256", "value": "0" } ], "payable": false, "type": "function" }, { "constant": true, "inputs": [], "name": "alreadyVoted", "outputs": [ { "name": "", "type": "bool", "value": false } ], "payable": false, "type": "function" }, { "constant": false, "inputs": [], "name": "killContract", "outputs": [], "payable": false, "type": "function" }, { "constant": true, "inputs": [ { "name": "number", "type": "uint8" } ], "name": "getCandidateString", "outputs": [ { "name": "", "type": "string", "value": "" } ], "payable": false, "type": "function" }, { "constant": false, "inputs": [ { "name": "cand", "type": "string" } ], "name": "addCandidate", "outputs": [], "payable": false, "type": "function" }, { "constant": true, "inputs": [], "name": "getNumOfCandidates", "outputs": [ { "name": "", "type": "uint8", "value": "0" } ], "payable": false, "type": "function" }, { "constant": false, "inputs": [ { "name": "cand", "type": "string" } ], "name": "vote", "outputs": [], "payable": false, "type": "function" }, { "inputs": [], "payable": false, "type": "constructor" } ]).at("0x08d1db36efdc3f73c6ccb3ce4824c545734930c8");	
+
+	function showList(){
+		var list = web3.eth.accounts;
+		var table=document.getElementById("table1");
+		var length = vc.getNumOfCandidates();
+		for(var i=0;i<length;i++){
+			var candidate = vc.getCandidateString(i);
+			var row=table.insertRow();
+			var cell1=row.insertCell(0);
+			var cell2=row.insertCell(1);
+			cell1.innerHTML = candidate;
+			cell2.innerHTML = vc.getScore(candidate);
+			}
+	}
+
+	function vote(){
+	var candidate=document.getElementById("candidate").value;
+	// var account=document.getElementById("account").value;
+	var account = web3.eth.accounts[0];
+	web3.eth.defaultAccount = account;
+	// if(web3.personal.unlockAccount(account,document.getElementById('pass').value)){
+		var alreadyVoted=vc.alreadyVoted();
+		console.log(alreadyVoted);
+		
+		if(alreadyVoted)
+			alert("이미 투표하셨습니다.");
+		else
+			vc.vote(candidate,function(err,result){ if(!err) alert("트랜잭션이 성공적으로 전송되었습니다.|n"+result)});		
+	// }
+
+	}
+
+
+	function addCand(){
+	var candidate=document.getElementById("candidate").value;
+	// var account=document.getElementById("account").value;
+	var account = web3.eth.accounts[0];
+	console.log('account 1 : ' + account);
+	// if(web3.personal.unlockAccount(account,document.getElementById('pass').value)){
+		vc.addCandidate(candidate,{from:account,gas:2000000},function(err,result){ 
+			if(!err) 
+				alert("트랜잭션이 성공적으로 전송되었습니다.|n"+result)
+			else{
+				console(err);
+			}
+			});	
+	// }
+	}
+
+</script>
+<style>
+table {    border-collapse: collapse;    border: 4px solid #bbb;	width: 50%;}
+tr:nth-child(even){background-color: #ccc}
+input, select {
+    padding: 6px 10px;
+    margin: 4px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    box-sizing: border-box;}
+button:hover {  background-color: gold;}
+</style>
+</head>
+<body>
+    <h1>블록체인 투표</h1>
+	<div>
+	계정: <input type="text" id="account" value="0x6d5457796e807b454222feb2a32f2b9e26c089d3">
+	패스워드: <input type="password" id="pass" value="1234">	</div><br>
+	<div> <input type="text" id="candidate" value="영희">
+	<button onClick="vote()">투표하기</button> 
+	<button onClick="addCand()">후보 추가하기</button> </div>
+	<table id="table1" />
+	<script>
+	showList();
+	</script>
+</body>
+</html>
