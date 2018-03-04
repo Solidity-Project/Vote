@@ -1,6 +1,6 @@
 # Pre Work
 
-vote.html의 Line 13
+[vote.html](https://github.com/Solidity-Project/Vote/blob/master/vote.html)의 Line 13
 
 인스턴스를 만들 때 
 
