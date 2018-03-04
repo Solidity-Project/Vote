@@ -1,3 +1,13 @@
+# Pre Work
+
+vote.html의 Line 13
+
+인스턴스를 만들 때 
+
+끝 부분에 .at("Contract Address") 부분에
+
+자신이 만든 Contract Address값을 넣어준다.
+
 # The Solidity Contract-Oriented Programming Language
 [![Join the chat at https://gitter.im/ethereum/solidity](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/ethereum/solidity?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![Build Status](https://travis-ci.org/ethereum/solidity.svg?branch=develop)](https://travis-ci.org/ethereum/solidity)
 
